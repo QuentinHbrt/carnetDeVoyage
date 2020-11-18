@@ -1,0 +1,29 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+#------------------------------------------- HOME ------------------------------- #
+
+carnetvoyage_home:
+  path: /
+  controller: App\Controller\HomeController::main
+
+# carnetVoyage_test:
+#   path: /test
+#   controller: App\Controller\RegistrationController::index
+
+# ----------------------------------------- ARTICLES ----------------------------- #
+
+carnetvoyage_article_showall:
+  path: /article
+  controller: App\Controller\ArticleController::showAll
+
+# ----------------------------------------- UTILISATEUR -------------------------- #
+
+carnetvoyage_utilisateur_validation:
+  path: /validation/{token}
+  controller: App\Controller\SecurityController::emailValidate
+
+carnetvoyage_utilisateur_login:
+  path: /login
+  contrtoller: App\Controller\SecurityController\login

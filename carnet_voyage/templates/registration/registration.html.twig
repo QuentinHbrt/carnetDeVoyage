@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{# templates/emails/registration.html.twig #}
+<h1>Activation de votre compte</p>
+<p>Vous avez créé un compte sur notre site, veuillez cliquer sur le lien ci-dessous pour l'activer</p>
+<p><a href="{{ path'(route)' }}">Activer mon compte</a></p>
+{% endblock %}

@@ -1,0 +1,172 @@
+Création nouveau projet
+symfony new mon_projet --version=4.4
+
+Commande de démarrage serveur
+symfony server:start
+// faire cd mon_projet pour bien travailler sur le projet concerné
+cliquer sur le lien https//...
+
+------------------------------------------------
+
+config:
+    - route.yaml
+
+nomlaroute:
+    laroute: /
+    controller: 
+
+Pour rajouter par exemple un systeme templating comme twig
+Faire composer require twig
+---------------------------------------------------
+
+Pour récupérer un fichier par ex: css
+<link href {{ asset('css/style.css') }}
+et donc il faut installer asset
+composer require symfony/asset
+
+---------------------------------------------------
+
+Une entité représente une table dans notre base de donnée
+
+---------------------------------------------------
+BDD
+
+Pour créer Entity
+
+(Permet d'installer doctrine et maker) prenom
+Dans le terminal composer require doctrine maker autom
+
+Fichier
+- Repository : pour récupérer nos données (FAIRE DES SELECT)
+
+Acces à la BDD dans le fichier env et modifier la ligne DATABASE
+modifier dbuser par root
+modifier dbPassword par root pour mac et rien pour pc
+modifier dbName par le nom du projet (ex: monblog)
+
+Pour faire une connexion à la BDD
+Aller dans .env la ligne avec la DATABASE
+pour mac root:root à la place de name et password et le nom du projet
+DATABASE_URL=mysql://root:root@127.0.0.1:8889/monblog?serverVersion=5.7
+
+créer la base donnée ensuite en faisant : php bin/console doctrine:database:create
+
+Création Entity: php bin/console make:entity Article 
+ou : php bin/console doctrine:schema:validate //verifier la synchronisation avec la base de donnée
+
+Exemple:
+ New property name (press <return> to stop adding fields):
+ > titre
+ Field type (enter ? to see all types) [string]:
+ >
+  Field length [255]:
+ > 
+ Can this field be null in the database (nullable) (yes/no) [no]:
+ > no
+updated: src/Entity/Article.php
+
+ Add another property? Enter the property name (or press <return> to stop adding fields):
+ > contenu
+
+ Field type (enter ? to see all types) [string]:
+ > text
+
+ Can this field be null in the database (nullable) (yes/no) [no]:
+ > no
+
+ updated: src/Entity/Article.php
+
+ Add another property? Enter the property name (or press <return> to stop adding fields):
+  > dateCreation
+
+ Field type (enter ? to see all types) [string]:
+ > datetime
+
+ Can this field be null in the database (nullable) (yes/no) [no]:
+ > no
+
+ updated: src/Entity/Article.php
+Add another property? Enter the property name (or press <return> to stop adding fields):
+ > 
+  
+  Success! 
+           
+
+ Next: When you're ready, create a migration with php bin/console make:migration
+// Ensuite on crée la migration de la base de donnée pour y avoir accés
+moussaillon@Mac-Code-07 monBlog % php bin/console make:migration
+
+// Dans le dossier migration un fichier version s'est crée avec des requêtes SQL.
+// copier : php bin/console doctrine:migrations:migrate et coller
+// rentrer : yes
+
+Puis création du controller:
+php bin/console make:controller Article
+
+------------------------------------------------------------
+Dans Repository -> ArticleRepository
+La fonction Manager sert à manipuler les données INSERT, UPDATE, DELETE
+Pour récupérer l'entity manager de Doctrine:
+$em = $this->getDoctrine()->getManager();
+$dernierArticle = $em->getRepository(Article::class)->findOneBy([],["dateCreation" => "DESC"]);
+
+-----------------------------------------------
+
+Pour générer un formulaire:
+Dans la console télécharger le package : composer require form
+Puis pour le créer:
+php bin/console make:form
+
+ The name of the form class (e.g. FierceChefType):
+ > Article // le nom du formulaire qu'on va créer et par convention le nom de la class
+
+ The name of Entity or fully qualified model class name that the new form will be bound to (empty for none):
+ > Article // Correspond au nom de l'Entity
+ ( Voir function dans ArticleController.php pour visualiser les etapes suivantes)
+ ( Voir egalement la page create.html.twig pour voir l'application de cette fonction)
+
+ pour pouvoir créer une fonction create dans un formulaire:
+ public function create(Request $request)
+{
+}
+
+
+----------------------------------------------------------
+
+// Pack pour pouvoir faire de l'injection de dépendance.
+composer require symfony/dependency-injection
+
+----------------------------------------------------------
+
+UTILISATEUR:
+
+installlation package security:
+composer require security-bundle
+
+création class Utilisateur :
+php bin/console make:user Utilisateur
+
+Créer un formulaire pour s'enregistrer:
+(Tout d'abord installer le package: composer require validator) // pour valider les champs
+php bin/console make:registration-form
+
+Créer le systeme de login(authentification) : php bin/console make:auth
+
+
+
+------------------------------------------------------------
+
+ROLE:
+
+Pour gérer les roles des admin et user
+dans config->packages->security.yaml  :
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+    
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+-----------------------------------------------------------
+Installer le file uploader bundle
+
+composer require vich/uploader-bundle
